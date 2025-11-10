@@ -13,4 +13,8 @@ ipywidgets
 Flask
 Flask-Cors
 asgiref
+Flask
+gunicorn
+python-dotenv
+requests
 av
