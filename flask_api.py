@@ -13,7 +13,6 @@ import logging
 from datetime import datetime
 from werkzeug.utils import secure_filename
 # Configure logging
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB limit
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -77,6 +76,8 @@ except ImportError as e:
     modules_available['speed_and_distance'] = False
 
 app = Flask(__name__, template_folder='frontend', static_folder='frontend', static_url_path='/')
+app.config['UPLOAD_FOLDER'] = 'uploads'
+app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024  # 50 MB upload limit
 CORS(app)
 
 
@@ -672,27 +673,6 @@ def upload_video():
     except Exception as e:
         logger.error(f"Error rendering upload page: {e}")
         return f"Error loading upload page: {e}", 500
-def upload_video():
-    if 'video' not in request.files:
-        return jsonify({"error": "No video file"}), 400
-
-    video = request.files['video']
-    filename = secure_filename(video.filename)
-    save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-    # ✅ Saves stream directly to disk, not memory
-    video.save(save_path)
-
-    # Call your processing logic (reads file from disk)
-    process_video(save_path)
-
-    # ✅ Free memory and cleanup
-    gc.collect()
-    os.remove(save_path)
-
-    return jsonify({"status": "processed"})
-Why t
 
 @app.route('/api/status')
 def get_status():
