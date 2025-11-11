@@ -1023,7 +1023,4 @@ if __name__ == '__main__':
         print("\n👋 Server stopped by user")
     except Exception as e:
         print(f"\n❌ Server error: {e}")
-del frame
-del result
-import gc
-gc.collect()
+
